@@ -32,6 +32,47 @@ class Arvore:
                     if atual is None:
                         anterior.dir = novo
                         return
+                    
+    def pre_ordem(self, raiz):
+        elementos = []
+        if raiz:
+            elementos.append(raiz.item)
+            elementos.extend(self.pre_ordem(raiz.esq))
+            elementos.extend(self.pre_ordem(raiz.dir))
+        return elementos
+
+    def pos_ordem(self, raiz):
+        elementos = []
+        if raiz:
+            elementos.extend(self.pos_ordem(raiz.esq))
+            elementos.extend(self.pos_ordem(raiz.dir))
+            elementos.append(raiz.item)
+        return elementos
+
+    def in_ordem(self, raiz):
+        elementos = []
+        if raiz:
+            elementos.extend(self.in_ordem(raiz.esq))
+            elementos.append(raiz.item)
+            elementos.extend(self.in_ordem(raiz.dir))
+        return elementos
+
+    def ordenar(self):
+        return self.in_ordem(self.root)
+
+    def equilibrar(self):
+        elementos = self.ordenar()
+        
+        def reconstruir_arvore(elementos):
+            if not elementos:
+                return None
+            meio = len(elementos) // 2
+            raiz = No(elementos[meio])
+            raiz.esq = reconstruir_arvore(elementos[:meio])
+            raiz.dir = reconstruir_arvore(elementos[meio+1:])
+            return raiz
+
+        self.root = reconstruir_arvore(elementos)
 
     def gerar_grafico(self):
         gerador = Gerar()
